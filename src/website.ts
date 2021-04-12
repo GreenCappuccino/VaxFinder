@@ -64,7 +64,7 @@ export class Webserver {
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
 			this.users.set(profile.id, {
-				avatar: profile.photos.filter(photo => photo.primary === true)[0].value,
+				avatar: profile.photos.filter(photo => photo.primary === true)[0]?.value,
 				display: profile.displayName,
 				user_id: profile.id,
 				username: profile.username,
@@ -203,9 +203,3 @@ export class Webserver {
 		};
 	}
 }
-
-
-
-
-
-

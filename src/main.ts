@@ -53,12 +53,16 @@ const update = async () => {
 						}).catch(e => updateLogger.error(e));
 					}
 				}).catch(e => updateLogger.error(e));
-			}).catch(e => updateLogger.error(e)).finally(() => {
+			}).catch(
+				e => updateLogger.error(e),
+			).finally(() => {
 				working = false;
 			});
 		}).catch((e) => {
 			updateLogger.error('Failed to successfully aggregate vaccine data.');
 			updateLogger.error(e);
+		}).finally(() => {
+			working = false;
 		});
 	} else {
 		updateLogger.warn('Looks like the previous update cycle did not end yet. Not starting another one.');
