@@ -1,10 +1,10 @@
-import express, {Express, query} from 'express';
+import express, {Express} from 'express';
 import exphbs from 'express-handlebars';
 import * as log4js from 'log4js';
 import {Logger} from 'log4js';
 import path from 'path';
 import passport from 'passport';
-import {Strategy, Profile, VerifyCallback, Scope} from '@oauth-everything/passport-discord';
+import {Strategy, Scope} from '@oauth-everything/passport-discord';
 import cors from 'cors';
 import session from 'express-session';
 import {ensureLoggedIn} from 'connect-ensure-login';
@@ -76,9 +76,8 @@ export class Webserver {
 		this.web.set('view engine', 'handlebars');
 
 		this.web.get('/', ((req, res) => {
-			const loggedIn = req.isAuthenticated();
 			res.render('home', {
-				data: this.addUserData(req),
+				data: Webserver.addUserData(req),
 			});
 		}));
 		this.web.get('/login', passport.authenticate('discord', {
@@ -92,7 +91,7 @@ export class Webserver {
 		});
 		this.web.get('/track', ensureLoggedIn('/login'), (req, res) => {
 			res.render('track', {
-				data: this.addUserData(req),
+				data: Webserver.addUserData(req),
 			});
 		});
 		this.web.post('/submitTracker', ensureLoggedIn('/login'), ((req, res) => {
@@ -180,7 +179,7 @@ export class Webserver {
 					trackers.push(trackerModels[i].dataValues);
 				}
 				res.render('myTrackers', {
-					data: Object.assign(this.addUserData(req), {
+					data: Object.assign(Webserver.addUserData(req), {
 						trackers: trackers,
 					}),
 				});
@@ -191,11 +190,11 @@ export class Webserver {
 		this.logger.info('Webserver loaded.');
 	}
 
-	public start() {
+	public start(): void {
 		this.web.listen(this.port, '0.0.0.0',() => this.logger.info('Webserver started.'));
 	}
 
-	private addUserData(req) {
+	private static addUserData(req) {
 		return {
 			loggedIn: req.isAuthenticated(),
 			userDisplay: req.user?.display,
