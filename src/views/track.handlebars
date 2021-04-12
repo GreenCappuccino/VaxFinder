@@ -1,0 +1,26 @@
+<section class="ui-section-feature">
+    <div class="ui-layout-container">
+        <form method="POST" action="submitTracker" class="ui-layout-column-center">
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="address">Address</label>
+                <input name="address" class="ui-component-input ui-component-input-medium" id="address" placeholder="1234 Main Street">
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="radius">Radius (miles)</label>
+                <input name="radius" type="number" class="ui-component-input ui-component-input-medium" id="radius" placeholder="25">
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="phone">Phone Number</label>
+                <input name="phone" type="tel" class="ui-component-input ui-component-input-medium" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890">
+                <small id="phoneHelp" class="form-text text-muted">Format: 000-000-0000</small>
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="notes">Notes</label>
+                <textarea name="notes" class="ui-component-input ui-component-input-medium" id="notes" rows="3" placeholder="Enter any notes here."></textarea>
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <button type="submit" class="ui-layout-column-center ui-component-button ui-component-button-primary ui-component-button-normal">Submit</button>
+            </div>
+        </form>
+    </div>
+</section>

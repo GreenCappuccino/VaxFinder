@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- META -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="uisual" content="Made with Uisual (uisual.com)">
+    <meta name="author" content="#">
+    <meta name="description" content="#">
+    <meta name="referrer" content="unsafe-url">
+    <meta name="robots" content="index, follow">
+    <!-- SPEED -->
+    <link rel="preconnect" href="https://res.cloudinary.com">
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <!-- LINK -->
+    <link rel="me" href="#">
+    <link rel="canonical" href="#">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <!-- PERFORMANCE -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="preload" as="style" href="uisual.css">
+    <link rel="stylesheet" href="uisual.css">
+    <!-- TITLE -->
+    <title>VaxFinder</title>
+</head>
+<body>
+<header role="banner" class="ui-section-header">
+    <div class="ui-layout-container">
+        <div class="ui-section-header__layout ui-layout-flex">
+            <!-- LOGO -->
+            <a href="/" role="link" aria-label="/" class="ui-section-header--logo">
+                <img src="vaxfinder-blue.png" style="height: 30px">
+            </a>
+            <!-- HAMBURGER -->
+            <input type="checkbox" id="ui-section-header--menu-id">
+            <label for="ui-section-header--menu-id" class="ui-section-header--menu-icon"></label>
+            <!-- MENU -->
+            <nav role="navigation" class="ui-section-header--nav ui-layout-flex">
+                <a href="/" role="link" aria-label="/" class="ui-section-header--nav-link">Home</a>
+                {{#if @loggedIn}}
+                    <a href="track" role="link" aria-label="track" class="ui-section-header--nav-link">Track</a>
+                    <a href="myTrackers" role="link" aria-label="myTrackers" class="ui-section-header--nav-link">My Trackers</a>
+                    <a class="ui-section-header--nav-link" style="color: black;">Welcome {{@userDisplay}}!</a>
+                    <img src="{{@avatar}}?size=32" style="border-radius: 16px;"/>
+                    <a class="ui-component-button ui-component-button-primary ui-component-button-normal" href="logout">Logout</a>
+                {{else}}
+                    <a class="ui-component-button ui-component-button-primary ui-component-button-normal" href="login">Login</a>
+                {{/if}}
+            </nav>
+        </div>
+    </div>
+</header>
+<main role="main">
+    {{{body}}}
+</main>
+<footer role="contentinfo" class="ui-section-footer">
+    <div class="ui-layout-container">
+        <div class="ui-section-footer__layout ui-layout-flex">
+            <!-- COPYRIGHT -->
+            <p class="ui-section-footer--copyright ui-text-note"><small>&copy; 2021 Brian Lu</small></p>
+            <!-- MENU -->
+        </div>
+    </div>
+</footer>
+</body>
+</html>

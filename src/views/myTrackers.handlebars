@@ -1,0 +1,41 @@
+<section class="ui-section-feature">
+    <div class="ui-layout-container">
+    <div style="overflow-x: scroll; padding: 10px;">
+        <table class="ui-layout-column-center" style="width: 100%">
+            <thead>
+            <tr>
+                <th scope="col">Address</th>
+                <th scope="col">Longitude</th>
+                <th scope="col">Latitude</th>
+                <th scope="col">Radius</th>
+                <th scope="col">Notes</th>
+                <th scope="col">Number</th>
+                <th scope="col">Triggered</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each @trackers}}
+                <tr>
+                    <td>{{this.address}}</td>
+                    <td>{{this.longitude}}</td>
+                    <td>{{this.latitude}}</td>
+                    <td>{{this.radius}}</td>
+                    <td>{{this.notes}}</td>
+                    <td>{{this.alert}}</td>
+                    <td>{{this.triggered}}</td>
+                    <td>
+                        <a href="resetTracker?snowflake={{this.msgsnowflake}}" style="margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" >Reset</a>
+                        <a href="deleteTracker?snowflake={{this.msgsnowflake}}" style="border: none; background-color: #D11C00; margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" >Delete</a>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+        <a style="border: none; background-color: #D11C00; margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" href="clearTrackers">
+        Delete All Trackers
+        </a>
+    </div>
+</section>
