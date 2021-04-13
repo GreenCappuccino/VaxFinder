@@ -101,7 +101,9 @@ export class Webserver {
 		this.web.get('/login', (req, res) => {
 			res.render('login');
 		});
-
+		this.web.get('/privacy-policy', (req, res) => {
+			res.render('privacy-policy');
+		});
 		this.web.get('/login/google', passport.authenticate('google', { scope: ['profile'] }));
 
 		this.web.get('/login/google/callback', 
