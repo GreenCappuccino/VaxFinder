@@ -18,6 +18,7 @@ interface User {
 	username: string,
 	display: string,
 	avatar: string,
+	provider: string,
 }
 
 export class Webserver {
@@ -66,9 +67,10 @@ export class Webserver {
 			this.logger.trace(profile);
 			this.users.set(profile.id, {
 				avatar: profile.photos.filter(photo => photo.type === 'default')[0]?.value,
-				display: profile.displayName,
+				display: profile.given_name,
 				user_id: profile.id,
 				username: profile.id,
+				provider: 'Google',
 			});
 			return cb(null, this.users.get(profile.id));
 		},
@@ -85,6 +87,7 @@ export class Webserver {
 				display: profile.displayName,
 				user_id: profile.id,
 				username: profile.username,
+				provider: 'Discord',
 			});
 			cb(null, this.users.get(profile.id));
 		}));
@@ -160,7 +163,7 @@ export class Webserver {
 			}).catch((e) => {
 				this.logger.error(e);
 			}).finally(() => {
-				res.redirect('myTrackers');
+				res.redirect('myAccount');
 			});
 		}));
 		this.web.get('/clearTrackers', ensureLoggedIn('/login'), (req, res) => {
@@ -173,7 +176,7 @@ export class Webserver {
 			}).catch((e) => {
 				this.logger.error(e);
 			}).finally(() => {
-				res.redirect('myTrackers');
+				res.redirect('myAccount');
 			});
 		});
 		this.web.get('/resetTracker', ensureLoggedIn('/login'), (req, res) => {
@@ -186,10 +189,10 @@ export class Webserver {
 						msgsnowflake: snowflake,
 					},
 				}).finally(() => {
-					res.redirect('myTrackers');
+					res.redirect('myAccount');
 				});
 			} else {
-				res.redirect('myTrackers');
+				res.redirect('myAccount');
 			}
 		});
 		this.web.get('/deleteTracker', ensureLoggedIn('/login'), (req, res) => {
@@ -200,13 +203,13 @@ export class Webserver {
 						msgsnowflake: snowflake,
 					},
 				}).finally(() => {
-					res.redirect('myTrackers');
+					res.redirect('myAccount');
 				});
 			} else {
-				res.redirect('myTrackers');
+				res.redirect('myAccount');
 			}
 		});
-		this.web.get('/myTrackers', ensureLoggedIn('/login'), (req, res) => {
+		this.web.get('/myAccount', ensureLoggedIn('/login'), (req, res) => {
 			Trackers.findAll({
 				where: {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -221,7 +224,7 @@ export class Webserver {
 					// @ts-ignore
 					trackers.push(trackerModels[i].dataValues);
 				}
-				res.render('myTrackers', {
+				res.render('myAccount', {
 					data: Object.assign(Webserver.addUserData(req), {
 						trackers: trackers,
 					}),
@@ -242,6 +245,7 @@ export class Webserver {
 			loggedIn: req.isAuthenticated(),
 			userDisplay: req.user?.display,
 			avatar: req.user?.avatar,
+			provider: req.user?.provider,
 		};
 	}
 }
