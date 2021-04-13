@@ -8,7 +8,7 @@
 		"build": "tsc -p .",
 		"dev": "ts-node-dev src/main.ts"
 	},
-	"author": "Brian Lu",
+	"author": "Brian Lu and Dev Singh",
 	"license": "GPL-3.0",
 	"dependencies": {
 		"@oauth-everything/passport-discord": "^1.0.2",
@@ -34,6 +34,7 @@
 		"log4js": "^6.3.0",
 		"node-fetch": "^2.6.1",
 		"passport": "^0.4.1",
+		"passport-google-oauth2": "^0.2.0",
 		"passport-oauth2": "^1.5.0",
 		"reflect-metadata": "^0.1.13",
 		"sequelize": "^6.6.2",
