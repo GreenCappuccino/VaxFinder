@@ -8,7 +8,7 @@
 		"build": "tsc -p .",
 		"dev": "ts-node-dev src/main.ts"
 	},
-	"author": "Brian Lu",
+	"author": "Brian Lu and Dev Singh",
 	"license": "GPL-3.0",
 	"dependencies": {
 		"@oauth-everything/passport-discord": "^1.0.2",
