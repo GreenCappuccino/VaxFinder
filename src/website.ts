@@ -11,6 +11,7 @@ import {ensureLoggedIn} from 'connect-ensure-login';
 import {Trackers} from './models';
 import {Nominatim} from './nominatim';
 import {Model} from 'sequelize/types';
+import {Strategy as GoogleStrategy} from 'passport-google-oauth2';
 
 interface User {
 	user_id: string,
@@ -56,10 +57,26 @@ export class Webserver {
 			done(null, this.users.get(id));
 		}));
 
+		passport.use(new GoogleStrategy({
+			clientID: process.env.VAXFINDER_GOOGLE_CLIENT_ID,
+			clientSecret: process.env.VAXFINDER_GOOGLE_CLIENT_SECRET,
+			callbackURL: `${process.env.VAXFINDER_HOST}/login/google/callback`,
+			passReqToCallback: false}, 
+		(accessToken, refreshToken, profile, cb) => {
+			this.logger.trace(profile);
+			this.users.set(profile.id, {
+				avatar: profile.photos.filter(photo => photo.type === 'default')[0]?.value,
+				display: profile.displayName,
+				user_id: profile.id,
+				username: profile.id,
+			});
+			return cb(null, this.users.get(profile.id));
+		},
+		));
 		passport.use(new Strategy({
-			clientID: process.env.VAXFINDER_OAUTH_CLIENT_ID,
-			clientSecret: process.env.VAXFINDER_OAUTH_CLIENT_SECRET,
-			callbackURL: 'https://vaxfinder.greencappuccino.net/login/callback',
+			clientID: process.env.VAXFINDER_DISCORD_OAUTH_CLIENT_ID,
+			clientSecret: process.env.VAXFINDER_DISCORD_OAUTH_CLIENT_SECRET,
+			callbackURL: `${process.env.VAXFINDER_HOST}/login/discord/callback`,
 			scope: [Scope.IDENTIFY],
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
@@ -80,12 +97,28 @@ export class Webserver {
 				data: Webserver.addUserData(req),
 			});
 		}));
-		this.web.get('/login', passport.authenticate('discord', {
+		
+		this.web.get('/login', (req, res) => {
+			res.render('login');
+		});
+
+		this.web.get('/login/google', passport.authenticate('google', { scope: ['profile'] }));
+
+		this.web.get('/login/google/callback', 
+			passport.authenticate('google', { failureRedirect: '/login' }),
+			function(req, res) {
+				res.redirect('/');
+			},
+		);
+
+		this.web.get('/login/discord', passport.authenticate('discord', {
 		}));
-		this.web.get('/login/callback', passport.authenticate('discord', {
+
+		this.web.get('/login/discord/callback', passport.authenticate('discord', {
 			session: true,
 			successReturnToOrRedirect: '/',
 		}));
+
 		this.web.get('/logout', function (req, res) {
 			req.session.destroy(() => res.redirect('/'));
 		});
