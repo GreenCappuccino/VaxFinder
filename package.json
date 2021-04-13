@@ -4,8 +4,12 @@
 	"description": "vaccine tracking and alert service for locations. Discord interface",
 	"main": "dist/index.js",
 	"scripts": {
-		"start": "tsc -p . && node dist/main.js",
+		"start": "node dist/main.js",
+		"postinstall": "tsc -p . && mv -r -v src/static dtst/ && mv -r -v src/views dtst/ && rm -rf src/",
 		"dev": "ts-node-dev src/main.ts"
+	},
+	"engines": {
+		"node": "14.16.0"
 	},
 	"author": "Brian Lu and Dev Singh",
 	"license": "GPL-3.0",
@@ -22,7 +26,7 @@
 		"connect-ensure-login": "^0.1.1",
 		"cors": "^2.8.5",
 		"discord.js": "^12.5.3",
-		"discord.js-commando": "discordjs/Commando",
+		"discord.js-commando": "github:discordjs/Commando",
 		"express": "^4.17.1",
 		"express-handlebars": "^5.3.0",
 		"express-session": "^1.17.1",
@@ -40,6 +44,7 @@
 		"sqlite": "^4.0.21",
 		"sqlite3": "^5.0.2",
 		"twilio": "^3.60.0",
+		"typescript": "^4.2.4",
 		"url-join": "^4.0.1",
 		"valid-url": "^1.0.9"
 	},
@@ -53,15 +58,14 @@
 		"@types/kdbush": "^3.0.0",
 		"@types/lodash": "^4.14.168",
 		"@types/node": "^14.14.37",
-		"@types/node-fetch": "^2.5.9",
+		"@types/node-fetch": "^2.5.10",
 		"@types/url-join": "^4.0.0",
 		"@types/valid-url": "^1.0.3",
-		"@typescript-eslint/eslint-plugin": "^4.20.0",
-		"@typescript-eslint/parser": "^4.20.0",
-		"eslint": "^7.23.0",
+		"@typescript-eslint/eslint-plugin": "^4.22.0",
+		"@typescript-eslint/parser": "^4.22.0",
+		"eslint": "^7.24.0",
 		"eslint-plugin-promise": "^4.3.1",
 		"ts-node": "^9.1.1",
-		"ts-node-dev": "^1.1.6",
-		"typescript": "^4.2.3"
+		"ts-node-dev": "^1.1.6"
 	}
 }
