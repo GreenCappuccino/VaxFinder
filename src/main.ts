@@ -21,7 +21,7 @@ models.syncModels();
 const aggregator: VaccineAggregator = new VaccineAggregator();
 const finder: Finder = new Finder();
 const discord: DiscordBot = new DiscordBot();
-const webserver: Webserver = new Webserver(parseInt(process.env.VAXFINDER_WEBSERVER_PORT));
+const webserver: Webserver = new Webserver(parseInt(process.env.VAXFINDER_WEBSERVER_PORT || process.env.PORT));
 const webhookNotifier: WebhookNotifier = new WebhookNotifier();
 const twilioNotifier: TwilioNotifier = new TwilioNotifier();
 
