@@ -7,6 +7,7 @@ import AbortController from 'abort-controller';
 export class VaccineAggregator {
 
 	logger: Logger;
+	abortTimeout = 12000;
 
 	constructor() {
 		this.logger = log4js.getLogger('vaccineAggregator');
@@ -51,7 +52,7 @@ export class VaccineAggregator {
 				() => {
 					controller.abort();
 				},
-				30000,
+				this.abortTimeout,
 			);
 			fetch(`https://www.vaccinespotter.org/api/v0/states/${stateCode}.json`, {
 				method: 'GET',
@@ -87,7 +88,7 @@ export class VaccineAggregator {
 				() => {
 					controller.abort();
 				},
-				30000,
+				this.abortTimeout,
 			);
 			fetch('https://www.vaccinespotter.org/api/v0/states.json', {
 				method: 'GET',
