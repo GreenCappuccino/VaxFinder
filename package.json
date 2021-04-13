@@ -5,7 +5,7 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"start": "node dist/main.js",
-		"postinstall": "tsc -p . && mv -r -v src/static dtst/ && mv -r -v src/views dtst/ && rm -rf src/",
+		"postinstall": "tsc -p . && mv -v src/static dtst/ && mv -v src/views dtst/ && rm -rf src/",
 		"dev": "ts-node-dev src/main.ts"
 	},
 	"engines": {
