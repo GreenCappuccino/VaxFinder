@@ -61,7 +61,7 @@ export class Webserver {
 			clientID: process.env.VAXFINDER_GOOGLE_CLIENT_ID,
 			clientSecret: process.env.VAXFINDER_GOOGLE_CLIENT_SECRET,
 			callbackURL: `${process.env.VAXFINDER_HOST}/login/google/callback`,
-			passReqToCallback: false}, 
+			passReqToCallback: false},
 		(accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
 			this.users.set(profile.id, {
@@ -97,27 +97,32 @@ export class Webserver {
 				data: Webserver.addUserData(req),
 			});
 		}));
-		
+
 		this.web.get('/login', (req, res) => {
-			res.render('login');
+			res.render('login', {
+				data: Webserver.addUserData(req),
+			});
 		});
 		this.web.get('/privacy-policy', (req, res) => {
-			res.render('privacy-policy');
+			res.render('privacy-policy', {
+				data: Webserver.addUserData(req),
+			});
 		});
 		this.web.get('/terms-of-service', (req, res) => {
-			res.render('tos');
+			res.render('tos', {
+				data: Webserver.addUserData(req),
+			});
 		});
 		this.web.get('/login/google', passport.authenticate('google', { scope: ['profile'] }));
 
-		this.web.get('/login/google/callback', 
+		this.web.get('/login/google/callback',
 			passport.authenticate('google', { failureRedirect: '/login' }),
 			function(req, res) {
 				res.redirect('/');
 			},
 		);
 
-		this.web.get('/login/discord', passport.authenticate('discord', {
-		}));
+		this.web.get('/login/discord', passport.authenticate('discord'));
 
 		this.web.get('/login/discord/callback', passport.authenticate('discord', {
 			session: true,
