@@ -31,8 +31,8 @@
                         <td>{{this.alert}}</td>
                         <td>{{this.triggered}}</td>
                         <td>
-                            <a href="resetTracker?snowflake={{this.msgsnowflake}}" style="margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" >Reset</a>
-                            <a href="deleteTracker?snowflake={{this.msgsnowflake}}" style="border: none; background-color: #D11C00; margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" >Delete</a>
+                            <a href="/resetTracker?snowflake={{this.msgsnowflake}}" style="margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" >Reset</a>
+                            <a href="/deleteTracker?snowflake={{this.msgsnowflake}}" style="border: none; background-color: #D11C00; margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" >Delete</a>
                         </td>
                     </tr>
                 {{/each}}
@@ -40,7 +40,7 @@
             </table>
 
         </div>
-        <a style="border: none; background-color: #D11C00; margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" href="clearTrackers">
+        <a style="border: none; background-color: #D11C00; margin: 10px;" class="ui-component-button ui-component-button-normal ui-component-button-primary" href="/clearTrackers">
         Delete All Trackers
         </a>
     </div>

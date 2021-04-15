@@ -234,6 +234,15 @@ export class Webserver {
 				this.logger.error(e);
 			});
 		});
+		this.web.use(((req, res, next) => {
+			res.status(404).render('404', {
+				data: Webserver.addUserData(req),
+			});
+		}));
+		this.web.use((req, res, next) => {
+			this.logger.error(req);
+			res.status(500).send('500 Internal Server Error');
+		});
 		this.logger.info('Webserver loaded.');
 	}
 

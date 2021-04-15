@@ -1,4 +1,3 @@
-
 <section class="ui-section-hero">
     <div class="ui-layout-container">
         <div class="ui-section-hero__layout ui-layout-grid ui-layout-grid-2">
@@ -9,9 +8,9 @@
                 <!-- CTA -->
                 <div class="ui-component-cta ui-layout-flex">
                     {{#if @loggedIn}}
-                        <a href="track" role="link" aria-label="track" class="ui-component-button ui-component-button-normal ui-component-button-primary">Start tracking</a>
+                        <a href="/track" role="link" aria-label="track" class="ui-component-button ui-component-button-normal ui-component-button-primary">Start tracking</a>
                     {{else}}
-                        <a href="login" role="link" aria-label="login" class="ui-component-button ui-component-button-normal ui-component-button-primary">Login to start tracking</a>
+                        <a href="/login" role="link" aria-label="login" class="ui-component-button ui-component-button-normal ui-component-button-primary">Login to start tracking</a>
                     {{/if}}
 
                 </div>

@@ -48,13 +48,13 @@
             <nav role="navigation" class="ui-section-header--nav ui-layout-flex">
                 <a href="/" role="link" aria-label="/" class="ui-section-header--nav-link">Home</a>
                 {{#if @loggedIn}}
-                    <a href="track" role="link" aria-label="track" class="ui-section-header--nav-link">Track</a>
-                    <a href="myAccount" role="link" aria-label="myAccount" class="ui-section-header--nav-link">My Account</a>
+                    <a href="/track" role="link" aria-label="track" class="ui-section-header--nav-link">Track</a>
+                    <a href="/myAccount" role="link" aria-label="myAccount" class="ui-section-header--nav-link">My Account</a>
                     <a class="ui-section-header--nav-link" style="color: black;">Welcome {{@userDisplay}}!</a>
                     <img src="{{@avatar}}" style="border-radius: 16px;" width="32" height="32"/>
-                    <a class="ui-component-button ui-component-button-primary ui-component-button-normal" href="logout">Logout</a>
+                    <a class="ui-component-button ui-component-button-primary ui-component-button-normal" href="/logout">Logout</a>
                 {{else}}
-                    <a class="ui-component-button ui-component-button-primary ui-component-button-normal" href="login">Login</a>
+                    <a class="ui-component-button ui-component-button-primary ui-component-button-normal" href="/login">Login</a>
                 {{/if}}
             </nav>
         </div>
