@@ -4,7 +4,7 @@ import * as log4js from 'log4js';
 import {Logger} from 'log4js';
 import path from 'path';
 import passport from 'passport';
-import {Strategy, Scope} from '@oauth-everything/passport-discord';
+import {Strategy as DiscordStrategy, Scope as DiscordScope} from '@oauth-everything/passport-discord';
 import cors from 'cors';
 import session from 'express-session';
 import {ensureLoggedIn} from 'connect-ensure-login';
@@ -75,11 +75,11 @@ export class Webserver {
 			return cb(null, this.users.get(profile.id));
 		},
 		));
-		passport.use(new Strategy({
+		passport.use(new DiscordStrategy({
 			clientID: process.env.VAXFINDER_DISCORD_OAUTH_CLIENT_ID,
 			clientSecret: process.env.VAXFINDER_DISCORD_OAUTH_CLIENT_SECRET,
 			callbackURL: `${process.env.VAXFINDER_HOST}/login/discord/callback`,
-			scope: [Scope.IDENTIFY],
+			scope: [DiscordScope.IDENTIFY],
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
 			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value

@@ -9,15 +9,15 @@
                 <!-- CTA -->
                 <div class="ui-component-cta ui-layout-flex">
                     {{#if @loggedIn}}
-                        <a href="track" role="link" aria-label="track" class="ui-component-button ui-component-button-normal ui-component-button-primary">Start Tracking</a>
+                        <a href="track" role="link" aria-label="track" class="ui-component-button ui-component-button-normal ui-component-button-primary">Start tracking</a>
                     {{else}}
-                        <a href="login" role="link" aria-label="login" class="ui-component-button ui-component-button-normal ui-component-button-primary">Login</a>
+                        <a href="login" role="link" aria-label="login" class="ui-component-button ui-component-button-normal ui-component-button-primary">Login to start tracking</a>
                     {{/if}}
 
                 </div>
             </div>
             <!-- IMAGE -->
-            <img src="vaxfinder-image.png" loading="lazy" alt="A map of the United States with several red circles drawn on it." class="ui-image-half-right">
+            <img src="/img/vaxfinder-image.png" alt="A map of the United States with several red circles drawn on it." class="ui-image-half-right animated fadeIn">
         </div>
     </div>
 </section>

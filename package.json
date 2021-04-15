@@ -9,7 +9,7 @@
 		"dev": "ts-node-dev src/main.ts"
 	},
 	"engines": {
-		"node": "14.16.0"
+		"node": ">=14.16.0"
 	},
 	"author": "Brian Lu and Dev Singh",
 	"license": "GPL-3.0",
