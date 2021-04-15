@@ -24,7 +24,7 @@ export const setupLogging = () => {
 		categories: {
 			default: {appenders: ['out', 'mainlog'], level: 'trace'},
 			discord: {appenders: ['out', 'mainlog'], level: 'trace'},
-			website: {appenders: ['out', 'mainlog'], level: 'trace'},
+			website: {appenders: ['out', 'mainlog'], level: 'debug'},
 			update: {appenders: ['out', 'mainlog'], level: 'debug'},
 			axios: {appenders: ['out', 'mainlog'], level: 'info'}, // debug is flooded with request/response
 			nominatim: {appenders: ['out', 'mainlog'], level: 'trace'},

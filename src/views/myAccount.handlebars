@@ -1,14 +1,10 @@
 <section class="ui-section-feature">
     <div class="ui-layout-container">
         <h1 style="text-align: center;">Account Information</h1>
-        <table class="ui-layout-column-center">
-            <tbody>
-                <tr>Account Provider: </tr>
-                <tr>{{{@provider}}}</tr>
-            </tbody>
-        </table>
+        <img src="{{@avatar}}" style="border-radius: 64px;" width="128" height="128"/>
+        <p style="text-align: center"><strong>Account Provider: {{@provider}}</strong></p>
     </div>
-    <div class="ui-layout-container">
+    <div class="ui-layout-container ui-section-feature">
         <h1 style="text-align: center;">My Trackers</h1>
         <div style="overflow-x: scroll; padding: 10px;">
             <table class="ui-layout-column-center" style="width: 100%">

@@ -82,8 +82,9 @@ export class Webserver {
 			scope: [Scope.IDENTIFY],
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
+			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value
 			this.users.set(profile.id, {
-				avatar: profile.photos.filter(photo => photo.primary === true)[0]?.value,
+				avatar: avatarUrl ? avatarUrl : 'user.png',
 				display: profile.displayName,
 				user_id: profile.id,
 				username: profile.username,
