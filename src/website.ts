@@ -84,7 +84,7 @@ export class Webserver {
 			this.logger.trace(profile);
 			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value
 			this.users.set(profile.id, {
-				avatar: avatarUrl ? avatarUrl : 'img/user.png',
+				avatar: avatarUrl ? avatarUrl : '/img/user.png',
 				display: profile.displayName,
 				user_id: profile.id,
 				username: profile.username,
