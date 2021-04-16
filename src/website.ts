@@ -12,6 +12,7 @@ import {Trackers} from './models';
 import {Nominatim} from './nominatim';
 import {Model} from 'sequelize/types';
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2';
+import {TwilioNotifier} from './notifiers';
 
 interface User {
 	user_id: string,
@@ -28,7 +29,19 @@ export class Webserver {
 	web: Express;
 	users: Map<string, User>;
 	geocoder: Nominatim;
-
+	phoneValidations: Record<string, number> = {};
+	addDashes = (f: string) => {
+		const r = /(\D+)/g;
+		let npa = '';
+		let nxx = '';
+		let last4 = '';
+		f = f.replace(r, '');
+		npa = f.substr(0, 3);
+		nxx = f.substr(3, 3);
+		last4 = f.substr(6, 4);
+		f = npa + '-' + nxx + '-' + last4;
+		return f;
+	};
 	constructor(port: number) {
 		this.port = port;
 		this.users = new Map<string, User>();
@@ -82,7 +95,7 @@ export class Webserver {
 			scope: [DiscordScope.IDENTIFY],
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
-			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value
+			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value;
 			this.users.set(profile.id, {
 				avatar: avatarUrl ? avatarUrl : '/img/user.png',
 				display: profile.displayName,
@@ -125,7 +138,11 @@ export class Webserver {
 				res.redirect('/');
 			},
 		);
-
+		this.web.get('/deregister-phone', (req, res) => {
+			res.render('removePhoneNumber', {
+				data: Webserver.addUserData(req),
+			});
+		});
 		this.web.get('/login/discord', passport.authenticate('discord'));
 
 		this.web.get('/login/discord/callback', passport.authenticate('discord', {
@@ -208,6 +225,36 @@ export class Webserver {
 				});
 			} else {
 				res.redirect('myAccount');
+			}
+		});
+		this.web.post('/sendDeleteVerificationCode', (req, res) => {
+			const phoneNumber = String(req.body.phone);
+			const randomCode: number = Math.floor(10000000 + Math.random() * 90000000);
+			this.phoneValidations[phoneNumber] = randomCode;
+			const notifier: TwilioNotifier = new TwilioNotifier();
+			notifier.sendDeleteCode(phoneNumber, randomCode).catch(() => {return res.json({message: 'There was an error deregistering your phone number. Please, try again!'});});
+			res.render('verifyRemovePhoneNumber', {data: {phoneNumber}});
+		});
+		this.web.post('/finishDeleteVerificationCode', (req, res) => {
+			const phoneNumber = String(req.body.phone);
+			const userProvidedCode = parseInt(String(req.body.code), 10);
+			console.log(phoneNumber, userProvidedCode);
+			const ourCode: number = this.phoneValidations[phoneNumber];
+			if (userProvidedCode === ourCode) {
+				delete this.phoneValidations[phoneNumber];
+				Trackers.destroy({
+					where: {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						alert: this.addDashes(phoneNumber),
+					},
+				}).catch((e) => {
+					this.logger.error(e);
+					res.json({message: 'There was an error deregistering your phone number. Please, try again!'});
+				});
+				res.json({message: 'Your phone number has been deregistered!'});
+			} else {
+				res.json({message: 'There was an error deregistering your phone number. Please, try again!'});
 			}
 		});
 		this.web.get('/myAccount', ensureLoggedIn('/login'), (req, res) => {

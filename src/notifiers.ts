@@ -30,6 +30,13 @@ export class TwilioNotifier implements Notifier {
 			}),
 		});
 	}
+	sendDeleteCode(phoneNumber: string, code: number): Promise<string> {
+		return this.twilioClient.messages.create({
+			from: '+13129009304',
+			to: '+1'+phoneNumber.replace('-', ''),
+			body: `Your VaxFinder verification code is ${code}`,
+		});
+	}
 }
 
 export class WebhookNotifier implements Notifier {

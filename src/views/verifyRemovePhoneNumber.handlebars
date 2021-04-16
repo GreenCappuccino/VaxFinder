@@ -1,0 +1,21 @@
+<section class="ui-section-feature">
+    <div class="ui-layout-container">
+        <h1 style="text-align: center;">Enter your verification code</h1>
+        <form method="POST" action="/finishDeleteVerificationCode" class="ui-layout-column-center">
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="phone">Phone Number</label>
+                <input readonly name="phone" type="tel" class="ui-component-input ui-component-input-medium" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="{{{@phoneNumber}}}">
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="code">Code</label>
+                <input name="code" type="tel" class="ui-component-input ui-component-input-medium" id="code" pattern="[0-9]{8}" placeholder="54897821">
+                <a aria-label="#" class="ui-text-note"><small>Format: 54897821</small></a>
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <button type="submit" class="ui-layout-column-center ui-component-button ui-component-button-primary ui-component-button-normal">Deregister Phone</button>
+            </div>
+    </div>
+</section>
+<script type="text/javascript">
+document.getElementById('phone').value = '{{{@phoneNumber}}}';
+</script>
