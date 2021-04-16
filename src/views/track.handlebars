@@ -17,6 +17,15 @@
                 <a aria-label="#" class="ui-text-note" style="font-style: italic"><small>We will never share your phone number with anyone.</small></a>
             </div>
             <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <small>Yes, send a notification to this phone number when vaccine appointments are available.</small>
+                <input name="phoneconsent" type="checkbox" id="phoneconsent" required>
+                <p aria-label="#" class="ui-text-note" style="text-align: center"><small>
+                    By creating a tracker, you agree to allow us to contact you regarding available COVID-19 vaccination appointments in your area.
+                    <br>
+                    You may opt-out at any time by signing in and clicking the "Delete All Trackers" button on the <a href="/myAccount">My Account</a> page.
+                </small></p>
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
                 <label for="notes">Notes</label>
                 <textarea name="notes" class="ui-component-input ui-component-input-medium" id="notes" rows="3" placeholder="Enter any notes here."></textarea>
             </div>
@@ -24,12 +33,5 @@
                 <button type="submit" class="ui-layout-column-center ui-component-button ui-component-button-primary ui-component-button-normal">Create Tracker</button>
             </div>
         </form>
-        <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
-            <p aria-label="#" class="ui-text-note" style="text-align: center"><small>
-                By creating a tracker, you agree to allow us to contact you regarding available COVID-19 vaccination appointments in your area.
-                <br>
-                You may opt-out at any time by signing in and clicking the "Delete All Trackers" button on the <a href="/myAccount">My Account</a> page.
-            </small></p>
-        </div>
     </div>
 </section>
