@@ -1,0 +1,16 @@
+<section class="ui-section-feature">
+    <div class="ui-layout-container">
+        <h1 style="text-align: center;">Deregister your phone number</h1>
+        <p style="text-align: center; font-size: 0.75em">If you are recieving unsolicited messages from our service, verify your phone number here to disable all messages to your phone number.</p>
+        <form method="POST" action="/sendDeleteVerificationCode" class="ui-layout-column-center">
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <label for="phone">Phone Number</label>
+                <input name="phone" type="tel" class="ui-component-input ui-component-input-medium" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="555-867-5309">
+                <a aria-label="#" class="ui-text-note"><small>Format: 555-867-5309</small></a>
+                <a aria-label="#" class="ui-text-note" style="font-style: italic"><small>We will never share your phone number with anyone.</small></a>
+            </div>
+            <div class="ui-component-cta ui-layout-flex" style="margin: 10px">
+                <button type="submit" class="ui-layout-column-center ui-component-button ui-component-button-primary ui-component-button-normal">Send Code</button>
+            </div>
+    </div>
+</section>

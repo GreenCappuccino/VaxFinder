@@ -138,7 +138,11 @@ export class Webserver {
 				res.redirect('/');
 			},
 		);
-
+		this.web.get('/deregister-phone', (req, res) => {
+			res.render('removePhoneNumber', {
+				data: Webserver.addUserData(req),
+			});
+		});
 		this.web.get('/login/discord', passport.authenticate('discord'));
 
 		this.web.get('/login/discord/callback', passport.authenticate('discord', {
@@ -223,17 +227,18 @@ export class Webserver {
 				res.redirect('myAccount');
 			}
 		});
-		this.web.get('/sendDeleteVerificationCode', (req, res) => {
-			const phoneNumber = String(req.query.phone);
+		this.web.post('/sendDeleteVerificationCode', (req, res) => {
+			const phoneNumber = String(req.body.phone);
 			const randomCode: number = Math.floor(10000000 + Math.random() * 90000000);
 			this.phoneValidations[phoneNumber] = randomCode;
 			const notifier: TwilioNotifier = new TwilioNotifier();
-			notifier.sendDeleteCode(phoneNumber, randomCode).catch(() => {return res.json({success: false});});
-			res.json({success: true, phoneNumber});
+			notifier.sendDeleteCode(phoneNumber, randomCode).catch(() => {return res.json({message: 'There was an error deregistering your phone number. Please, try again!'});});
+			res.render('verifyRemovePhoneNumber', {data: {phoneNumber}});
 		});
-		this.web.get('/finishDeleteVerificationCode', (req, res) => {
-			const phoneNumber = String(req.query.phone);
-			const userProvidedCode = parseInt(String(req.query.code), 10);
+		this.web.post('/finishDeleteVerificationCode', (req, res) => {
+			const phoneNumber = String(req.body.phone);
+			const userProvidedCode = parseInt(String(req.body.code), 10);
+			console.log(phoneNumber, userProvidedCode);
 			const ourCode: number = this.phoneValidations[phoneNumber];
 			if (userProvidedCode === ourCode) {
 				delete this.phoneValidations[phoneNumber];
@@ -245,19 +250,11 @@ export class Webserver {
 					},
 				}).catch((e) => {
 					this.logger.error(e);
-					res.json({
-						success: false,
-						reason: 'Error removing number from DB',
-					});
+					res.json({message: 'There was an error deregistering your phone number. Please, try again!'});
 				});
-				res.json({
-					success: true,
-				});
+				res.json({message: 'Your phone number has been deregistered!'});
 			} else {
-				res.json({
-					success: false,
-					reason: 'Incorrect verification code provided',
-				});
+				res.json({message: 'There was an error deregistering your phone number. Please, try again!'});
 			}
 		});
 		this.web.get('/myAccount', ensureLoggedIn('/login'), (req, res) => {
