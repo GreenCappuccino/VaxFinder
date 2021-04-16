@@ -19,7 +19,7 @@ export class TwilioNotifier implements Notifier {
 
 	notify(result: FindResult): Promise<string> {
 		return this.twilioClient.calls.create({
-			from: '+13236132810',
+			from: '+13129009304',
 			to: '+1'+result.model['alert'].replace('-', ''),
 			url: process.env.TWIML_URL+'?'+new URLSearchParams({
 				Message: `Your monitor for ${result.model['address']} with a radius of ${result.model['radius']} ` +
@@ -28,6 +28,13 @@ export class TwilioNotifier implements Notifier {
 					`${result.features[0].properties.city}, in state code ${result.features[0].properties.state}.` +
 					`The postal code of this location is ${result.features[0].properties.postal_code}. Head over to vaccine spotter dot org for more details.`,
 			}),
+		});
+	}
+	sendDeleteCode(phoneNumber: string, code: number): Promise<string> {
+		return this.twilioClient.messages.create({
+			from: '+13129009304',
+			to: '+1'+phoneNumber.replace('-', ''),
+			body: `Your VaxFinder verification code is ${code}`,
 		});
 	}
 }

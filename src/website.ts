@@ -12,6 +12,7 @@ import {Trackers} from './models';
 import {Nominatim} from './nominatim';
 import {Model} from 'sequelize/types';
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2';
+import {TwilioNotifier} from './notifiers';
 
 interface User {
 	user_id: string,
@@ -28,7 +29,19 @@ export class Webserver {
 	web: Express;
 	users: Map<string, User>;
 	geocoder: Nominatim;
-
+	phoneValidations: Record<string, number> = {};
+	addDashes = (f: string) => {
+		const r = /(\D+)/g;
+		let npa = '';
+		let nxx = '';
+		let last4 = '';
+		f = f.replace(r, '');
+		npa = f.substr(0, 3);
+		nxx = f.substr(3, 3);
+		last4 = f.substr(6, 4);
+		f = npa + '-' + nxx + '-' + last4;
+		return f;
+	};
 	constructor(port: number) {
 		this.port = port;
 		this.users = new Map<string, User>();
@@ -82,7 +95,7 @@ export class Webserver {
 			scope: [DiscordScope.IDENTIFY],
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
-			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value
+			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value;
 			this.users.set(profile.id, {
 				avatar: avatarUrl ? avatarUrl : '/img/user.png',
 				display: profile.displayName,
@@ -208,6 +221,43 @@ export class Webserver {
 				});
 			} else {
 				res.redirect('myAccount');
+			}
+		});
+		this.web.get('/sendDeleteVerificationCode', (req, res) => {
+			const phoneNumber = String(req.query.phone);
+			const randomCode: number = Math.floor(10000000 + Math.random() * 90000000);
+			this.phoneValidations[phoneNumber] = randomCode;
+			const notifier: TwilioNotifier = new TwilioNotifier();
+			notifier.sendDeleteCode(phoneNumber, randomCode).catch(() => {return res.json({success: false});});
+			res.json({success: true, phoneNumber});
+		});
+		this.web.get('/finishDeleteVerificationCode', (req, res) => {
+			const phoneNumber = String(req.query.phone);
+			const userProvidedCode = parseInt(String(req.query.code), 10);
+			const ourCode: number = this.phoneValidations[phoneNumber];
+			if (userProvidedCode === ourCode) {
+				delete this.phoneValidations[phoneNumber];
+				Trackers.destroy({
+					where: {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						alert: this.addDashes(phoneNumber),
+					},
+				}).catch((e) => {
+					this.logger.error(e);
+					res.json({
+						success: false,
+						reason: 'Error removing number from DB',
+					});
+				});
+				res.json({
+					success: true,
+				});
+			} else {
+				res.json({
+					success: false,
+					reason: 'Incorrect verification code provided',
+				});
 			}
 		});
 		this.web.get('/myAccount', ensureLoggedIn('/login'), (req, res) => {
