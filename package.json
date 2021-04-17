@@ -5,7 +5,6 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"start": "node dist/main.js",
-		"postinstall": "tsc -p . && mv -v src/static dtst/ && mv -v src/views dtst/ && rm -rf src/",
 		"dev": "ts-node-dev src/main.ts"
 	},
 	"engines": {
@@ -24,6 +23,7 @@
 		"bootstrap": "^5.0.0-beta3",
 		"cachios": "^3.0.0",
 		"connect-ensure-login": "^0.1.1",
+		"connect-session-sequelize": "^7.1.1",
 		"cors": "^2.8.5",
 		"discord.js": "^12.5.3",
 		"discord.js-commando": "github:discordjs/Commando",

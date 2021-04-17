@@ -8,7 +8,7 @@ import {Strategy as DiscordStrategy, Scope as DiscordScope} from '@oauth-everyth
 import cors from 'cors';
 import session from 'express-session';
 import {ensureLoggedIn} from 'connect-ensure-login';
-import {Trackers} from './models';
+import {Passports, Sessions, Trackers} from './models';
 import {Nominatim} from './nominatim';
 import {Model} from 'sequelize/types';
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2';
@@ -27,7 +27,6 @@ export class Webserver {
 	port: number;
 	logger: Logger;
 	web: Express;
-	users: Map<string, User>;
 	geocoder: Nominatim;
 	phoneValidations: Record<string, number> = {};
 	addDashes = (f: string) => {
@@ -44,7 +43,6 @@ export class Webserver {
 	};
 	constructor(port: number) {
 		this.port = port;
-		this.users = new Map<string, User>();
 		this.logger = log4js.getLogger('website');
 		this.web = express();
 		this.geocoder = Nominatim.getInstance();
@@ -57,6 +55,7 @@ export class Webserver {
 		}));
 		this.web.use(session({
 			secret: process.env.VAXFINDER_SESSION_SECRET,
+			store: Sessions,
 			resave: false,
 			saveUninitialized: false,
 		}));
@@ -68,7 +67,22 @@ export class Webserver {
 		}));
 
 		passport.deserializeUser(((id: string, done) => {
-			done(null, this.users.get(id));
+			Passports.findOne({
+				where: {
+					userid: id,
+				},
+			}).then((userModel) => {
+				const user: User = {
+					user_id: userModel['userid'],
+					avatar: userModel['avatar'],
+					username: userModel['username'],
+					display: userModel['display'],
+					provider: userModel['provider'],
+				};
+				done(null, user);
+			}).catch((e) => {
+				done(e);
+			});
 		}));
 
 		passport.use(new GoogleStrategy({
@@ -78,14 +92,26 @@ export class Webserver {
 			passReqToCallback: false},
 		(accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
-			this.users.set(profile.id, {
-				avatar: profile.photos.filter(photo => photo.type === 'default')[0]?.value,
-				display: profile.given_name,
+			const user: User = {
 				user_id: profile.id,
-				username: profile.id,
+				avatar: profile.photos.filter(photo => photo.type === 'default')[0]?.value,
+				username: profile.displayName,
+				display: profile.given_name,
 				provider: 'Google',
+			};
+			const model = {
+				userid: user.user_id,
+				avatar: user.avatar,
+				display: user.display,
+				username: user.username,
+				provider: user.provider,
+			};
+			Passports.upsert(model).then(() => {
+				cb(null, user);
+			}).catch((e) => {
+				this.logger.error(e);
+				cb(e);
 			});
-			return cb(null, this.users.get(profile.id));
 		},
 		));
 		passport.use(new DiscordStrategy({
@@ -95,15 +121,28 @@ export class Webserver {
 			scope: [DiscordScope.IDENTIFY],
 		}, (accessToken, refreshToken, profile, cb) => {
 			this.logger.trace(profile);
-			const avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value;
-			this.users.set(profile.id, {
-				avatar: avatarUrl ? avatarUrl : '/img/user.png',
-				display: profile.displayName,
+			let avatarUrl = profile.photos.filter(photo => photo.primary === true)[0]?.value;
+			avatarUrl = avatarUrl ? avatarUrl : '/img/user.png';
+			const user: User = {
 				user_id: profile.id,
+				avatar: avatarUrl,
+				display: profile.displayName,
 				username: profile.username,
 				provider: 'Discord',
+			};
+			const model = {
+				userid: user.user_id,
+				avatar: user.avatar,
+				display: user.display,
+				username: user.username,
+				provider: user.provider,
+			};
+			Passports.upsert(model).then(() => {
+				cb(null, user);
+			}).catch((e) => {
+				this.logger.error(e);
+				cb(e);
 			});
-			cb(null, this.users.get(profile.id));
 		}));
 		this.web.engine('handlebars', exphbs());
 		this.web.set('views', path.join(__dirname, 'views'));
