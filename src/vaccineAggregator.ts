@@ -90,7 +90,7 @@ export class VaccineAggregator {
 				},
 				this.abortTimeout,
 			);
-			fetch('https://www.vaccinespotter.org/api/v0/states.json', {
+			fetch('https://archive.vaccinespotter.org/api/v0/states.json', {
 				method: 'GET',
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
