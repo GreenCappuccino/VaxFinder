@@ -7,7 +7,7 @@
 		"start": "node dist/main.js",
 		"dev": "ts-node-dev src/main.ts",
 		"tsc": "tsc",
-		"copy": "copyfiles -u 2 src/static/**/* dist/static && copyfiles -u 2 src/views/**/* dist/views",
+		"copy": "copyfiles -u 2 src/static/**/* dist/static && copyfiles -u 2 src/static/* dist/static && copyfiles -u 2 src/views/**/* dist/views && copyfiles -u 2 src/views/* dist/views",
 		"postinstall": "npm run tsc && npm run copy"
 	},
 	"engines": {
